@@ -4,10 +4,14 @@
 import { CorsOptions } from 'cors';
 import { env } from './env';
 
-const allowedOrigins: string[] = [
-  env.FRONTEND_URL,
-  'http://localhost:3001',
-];
+// Buat daftar origin dari env, hindari duplikat
+const allowedOrigins: string[] = Array.from(
+  new Set([
+    env.FRONTEND_URL,
+    // Izinkan localhost hanya di environment development
+    ...(env.NODE_ENV === 'development' ? ['http://localhost:3001'] : []),
+  ])
+);
 
 export const corsOptions: CorsOptions = {
   origin: (origin, callback) => {

@@ -8,7 +8,17 @@ interface FetchOptions extends RequestInit {
 }
 
 /**
- * Fungsi fetch dasar dengan penanganan error
+ * Mendapatkan token JWT dari localStorage.
+ * Hanya bisa dijalankan di sisi client (browser).
+ */
+function getAuthToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('token');
+}
+
+/**
+ * Fungsi fetch dasar dengan penanganan error dan auto-inject Authorization header.
+ * Token JWT diambil otomatis dari localStorage jika tersedia.
  */
 async function fetchAPI<T>(
   endpoint: string,
@@ -26,10 +36,18 @@ async function fetchAPI<T>(
     url += `?${searchParams.toString()}`;
   }
 
+  // Auto-inject Authorization header jika token tersedia
+  const token = getAuthToken();
+  const authHeader: Record<string, string> = token
+    ? { Authorization: `Bearer ${token}` }
+    : {};
+
   const config: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
-      ...fetchOptions.headers,
+      ...authHeader,
+      // Header manual dari caller dapat override header di atas jika diperlukan
+      ...(fetchOptions.headers as Record<string, string> | undefined),
     },
     ...fetchOptions,
   };

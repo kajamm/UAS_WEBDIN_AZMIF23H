@@ -48,3 +48,15 @@ export const formatDate = (date: Date | string): string => {
     day: 'numeric',
   });
 };
+
+/**
+ * Validasi format email menggunakan regex standar RFC 5322 (simplified).
+ * Gunakan ini di controller sebelum memproses data ke service/DB.
+ *
+ * @param email - String email yang akan divalidasi
+ * @returns true jika format email valid, false jika tidak
+ */
+export const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email.trim());
+};

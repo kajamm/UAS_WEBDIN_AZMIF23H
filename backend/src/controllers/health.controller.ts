@@ -41,7 +41,6 @@ export class HealthController {
       });
     } catch (error) {
       sendError(res, 'Koneksi database gagal. Cek konfigurasi database Anda.', 503);
-      next(error);
     }
   };
 }

@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { sendSuccess } from '../utils/response';
 import { RegisterDto, LoginDto } from '../types/auth';
 import { AppError } from '../types';
+import { isValidEmail } from '../utils/helpers';
 
 export class AuthController {
   private authService: AuthService;
@@ -22,6 +23,14 @@ export class AuthController {
         throw new AppError('Nama, email, dan password wajib diisi', 400);
       }
 
+      if (!isValidEmail(email)) {
+        throw new AppError('Format email tidak valid', 400);
+      }
+
+      if (password.length < 6) {
+        throw new AppError('Password minimal 6 karakter', 400);
+      }
+
       const result = await this.authService.register({ nama, email, password });
       
       sendSuccess(res, 'Registrasi berhasil', result, 201);
@@ -39,6 +48,10 @@ export class AuthController {
 
       if (!email || !password) {
         throw new AppError('Email dan password wajib diisi', 400);
+      }
+
+      if (!isValidEmail(email)) {
+        throw new AppError('Format email tidak valid', 400);
       }
 
       const result = await this.authService.login({ email, password });

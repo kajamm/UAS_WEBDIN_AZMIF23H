@@ -36,7 +36,7 @@ CREATE TABLE `users` (
   `nama`       VARCHAR(100)    NOT NULL                 COMMENT 'Nama lengkap pengguna',
   `email`      VARCHAR(150)    NOT NULL                 COMMENT 'Email (unik, digunakan untuk login)',
   `password`   VARCHAR(255)    NOT NULL                 COMMENT 'Password terenkripsi (bcrypt)',
-  `role`       ENUM('admin','user') NOT NULL DEFAULT 'user' COMMENT 'Peran pengguna',
+  `role`       ENUM('admin','operator','viewer','user') NOT NULL DEFAULT 'user' COMMENT 'Peran pengguna',
   `reset_token` VARCHAR(255) DEFAULT NULL,
   `reset_token_expired_at` DATETIME DEFAULT NULL,
   `created_at` TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,

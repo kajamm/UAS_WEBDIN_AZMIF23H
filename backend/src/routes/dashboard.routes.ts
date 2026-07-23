@@ -5,8 +5,8 @@ import { authMiddleware, roleMiddleware } from '../middleware/auth.middleware';
 const router = Router();
 const controller = new DashboardController();
 
-// Gunakan authMiddleware (seluruh user yg login) lalu role admin/viewer
-router.use(authMiddleware, roleMiddleware('admin', 'viewer'));
+// Gunakan authMiddleware (seluruh user yg login) lalu role admin/operator/viewer
+router.use(authMiddleware, roleMiddleware('admin', 'operator', 'viewer'));
 
 router.get('/stats', controller.getStats);
 
