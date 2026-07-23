@@ -6,14 +6,17 @@ import { uploadPosterMiddleware } from '../middleware/upload.middleware';
 const router = Router();
 const controller = new KegiatanController();
 
-// Semua endpoint Kegiatan dibatasi untuk Role: Admin saja
-router.use(authMiddleware, roleMiddleware('admin'));
+// Validasi token untuk semua rute
+router.use(authMiddleware);
 
-router.get('/', controller.getAll);
-router.get('/:id', controller.getById);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.post('/:id/upload', uploadPosterMiddleware.single('poster'), controller.uploadPoster);
-router.delete('/:id', controller.delete);
+// GET: Admin, Operator, Viewer
+router.get('/', roleMiddleware('admin', 'operator', 'viewer'), controller.getAll);
+router.get('/:id', roleMiddleware('admin', 'operator', 'viewer'), controller.getById);
+
+// POST, PUT, DELETE: Admin, Operator
+router.post('/', roleMiddleware('admin', 'operator'), controller.create);
+router.put('/:id', roleMiddleware('admin', 'operator'), controller.update);
+router.post('/:id/upload', roleMiddleware('admin', 'operator'), uploadPosterMiddleware.single('poster'), controller.uploadPoster);
+router.delete('/:id', roleMiddleware('admin', 'operator'), controller.delete);
 
 export default router;

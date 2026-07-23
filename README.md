@@ -1,126 +1,105 @@
 # UAS Web Dinamis
 
-Project UAS Web Dinamis menggunakan **Express.js + TypeScript** (backend) dan **Next.js + TypeScript** (frontend).
+Aplikasi Sistem Informasi Manajemen Kegiatan dengan arsitektur **Node.js (Express) + TypeScript** untuk Backend dan **Next.js (App Router) + TypeScript** untuk Frontend.
 
-## 📁 Struktur Project
+## Prasyarat
 
-```
-UAS_WEBDIN/
-├── backend/
-│   ├── src/
-│   │   ├── config/
-│   │   │   ├── env.ts          # Konfigurasi environment variables
-│   │   │   ├── cors.ts         # Konfigurasi CORS
-│   │   │   └── database.ts     # Koneksi MySQL pool
-│   │   ├── controllers/
-│   │   │   └── health.controller.ts
-│   │   ├── middleware/
-│   │   │   ├── errorHandler.ts
-│   │   │   ├── notFoundHandler.ts
-│   │   │   └── requestLogger.ts
-│   │   ├── models/             # (tahap berikutnya)
-│   │   ├── routes/
-│   │   │   ├── index.ts
-│   │   │   └── health.routes.ts
-│   │   ├── services/           # (tahap berikutnya)
-│   │   ├── types/
-│   │   │   └── index.ts        # Global TypeScript types
-│   │   ├── uploads/            # File uploads
-│   │   ├── utils/
-│   │   │   ├── response.ts     # API response helpers
-│   │   │   ├── logger.ts       # Logger utility
-│   │   │   └── helpers.ts      # General helpers
-│   │   ├── app.ts              # Express app setup
-│   │   └── index.ts            # Entry point
-│   ├── .env                    # Environment variables (jangan di-commit!)
-│   ├── .env.example            # Template environment variables
-│   ├── package.json
-│   └── tsconfig.json
-│
-└── frontend/
-    ├── app/
-    │   ├── globals.css         # Global styles
-    │   ├── layout.tsx          # Root layout
-    │   ├── page.tsx            # Halaman beranda
-    │   └── status/
-    │       └── page.tsx        # Halaman cek status API
-    ├── components/
-    │   ├── layout/
-    │   │   ├── Navbar.tsx
-    │   │   └── Footer.tsx
-    │   └── ui/
-    │       └── StatusBadge.tsx
-    ├── services/
-    │   ├── api.ts              # Base API client
-    │   └── health.service.ts   # Health check service
-    ├── types/
-    │   ├── api.ts              # API response types
-    │   ├── declarations.d.ts   # Module declarations
-    │   └── index.ts
-    ├── .env.local              # Environment variables frontend
-    ├── next.config.js
-    ├── package.json
-    └── tsconfig.json
-```
+Pastikan perangkat Anda telah terinstal:
+- [Node.js](https://nodejs.org/en/) (Disarankan versi LTS, misal 18.x atau 20.x)
+- [MySQL Server](https://dev.mysql.com/downloads/mysql/) (Versi 8.x atau setara)
+- NPM atau Yarn (Bawaan dari Node.js)
 
-## 🚀 Cara Menjalankan
+---
 
-### 1. Konfigurasi Database
+## 1. Instalasi & Import Database
 
-Edit file `backend/.env` dan sesuaikan:
+1. Buka MySQL Client Anda (seperti phpMyAdmin, DBeaver, atau MySQL CLI).
+2. Temukan file `database.sql` di folder `backend/database.sql`.
+3. Impor isi dari file `database.sql` tersebut ke server MySQL Anda. 
+   - Script tersebut akan otomatis membuat database `uas_webdin` beserta seluruh tabel dan data *dummy* awal.
 
-```env
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=password_anda
-DB_NAME=uas_webdin
-```
+---
 
-### 2. Jalankan Backend
+## 2. Konfigurasi Backend
 
+Masuk ke dalam folder `backend`:
 ```bash
 cd backend
-npm run dev
+npm install
 ```
 
-Server backend berjalan di: **http://localhost:3000**
+### Konfigurasi `.env`
+Salin atau buat file `.env` di dalam folder `backend/` dengan struktur berikut:
 
-### 3. Jalankan Frontend
+```env
+# Server
+PORT=3000
 
+# Database
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=uas_webdin
+DB_PORT=3306
+
+# JWT Secret (Ubah string ini untuk production)
+JWT_SECRET=rahasia_negara_123
+
+# SMTP Gmail untuk Reset Password
+SMTP_USER=email.anda@gmail.com
+SMTP_PASS=app_password_gmail_anda
+```
+
+> **Catatan**: Jika menggunakan Gmail, Anda harus menggunakan **App Password** pada bagian `SMTP_PASS`, bukan password email biasa.
+
+### Menjalankan Backend
+Untuk mode *development* (otomatis me-restart saat kode diubah):
+```bash
+npm run dev
+```
+Backend akan berjalan di `http://localhost:3000`.
+
+---
+
+## 3. Konfigurasi Frontend
+
+Buka terminal baru, dan masuk ke dalam folder `frontend`:
 ```bash
 cd frontend
-npm run dev
+npm install
 ```
 
-Frontend berjalan di: **http://localhost:3001**
+### Konfigurasi `.env.local`
+Buat file `.env.local` di dalam folder `frontend/` (opsional jika Anda menggunakan port 3000, tapi sangat disarankan jika API berada di alamat lain):
 
-## 🔗 API Endpoints
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+```
 
-| Method | Endpoint          | Deskripsi                |
-|--------|-------------------|--------------------------|
-| GET    | `/`               | Info API                 |
-| GET    | `/api`            | Info API lengkap         |
-| GET    | `/api/health`     | Cek status server        |
-| GET    | `/api/health/db`  | Cek koneksi database     |
+### Menjalankan Frontend
+Untuk mode *development*:
+```bash
+npm run dev
+```
+Frontend akan berjalan di `http://localhost:3001` (atau 3000 jika belum terpakai).
 
-## 🛠 Tech Stack
+---
 
-**Backend:**
-- Express.js + TypeScript
-- mysql2 (MySQL driver)
-- helmet (Security headers)
-- cors (Cross-Origin Resource Sharing)
-- morgan (HTTP request logger)
-- dotenv (Environment variables)
+## Daftar Akun Uji Coba
 
-**Frontend:**
-- Next.js 15 (App Router)
-- TypeScript
-- Vanilla CSS
+Gunakan akun berikut untuk menguji *Role-Based Access Control* (RBAC) di halaman Login:
 
-## 📝 Catatan
+- **Admin**: `admin@mail.com` | Password: `password123`
+- **Operator**: `operator@mail.com` | Password: `password123`
+- **Viewer**: `viewer@mail.com` | Password: `password123`
+- **User Biasa**: `user@mail.com` | Password: `password123`
 
-- File `.env` **jangan di-commit** ke git
-- Pastikan MySQL sudah berjalan sebelum menjalankan backend
-- Port backend: **3000**, Port frontend: **3001**
+---
+
+## Fitur Utama
+
+- **Role-Based Access Control (RBAC)**: Pembatasan rute dan tombol aksi secara dinamis dari frontend hingga middleware backend.
+- **Manajemen Kegiatan**: CRUD dengan kemampuan Upload Poster menggunakan Multer.
+- **Manajemen User**: CRUD dan fungsi Reset Password via SMTP Email.
+- **Prepared Statements**: Keamanan tingkat lanjut pada MySQL (mencegah SQL Injection).
+- **Client-Side & Server-Side Pagination**: Menampilkan data lebih ringan.
