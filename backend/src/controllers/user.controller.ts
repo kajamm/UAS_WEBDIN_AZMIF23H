@@ -74,4 +74,17 @@ export class UserController {
       next(error);
     }
   };
+
+  /**
+   * POST /api/users/:id/reset-password
+   */
+  requestResetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      await this.service.requestResetPassword(id);
+      sendSuccess(res, 'Email reset password telah dikirim');
+    } catch (error) {
+      next(error);
+    }
+  };
 }

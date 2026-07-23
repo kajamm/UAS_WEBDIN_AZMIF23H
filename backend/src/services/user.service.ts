@@ -1,9 +1,11 @@
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { execute, query } from '../config/db';
 import { UserRow } from '../models/user.model';
 import { CreateUserDto, UpdateUserDto, UserData } from '../types/user';
 import { AppError } from '../types';
 import { RowDataPacket } from 'mysql2';
+import { sendResetPasswordEmail } from '../utils/mailer';
 
 export class UserService {
   /**
@@ -125,5 +127,27 @@ export class UserService {
       }
       throw error;
     }
+  }
+
+  /**
+   * Request Reset Password
+   */
+  async requestResetPassword(id: number): Promise<void> {
+    const user = await this.getById(id);
+
+    // Generate random token (6 digit hex/angka)
+    const resetToken = crypto.randomBytes(3).toString('hex').toUpperCase();
+
+    // Set expiration (1 hour from now)
+    const expireDate = new Date();
+    expireDate.setHours(expireDate.getHours() + 1);
+
+    await execute(
+      'UPDATE users SET reset_token = ?, reset_token_expired_at = ? WHERE id = ?',
+      [resetToken, expireDate, id]
+    );
+
+    // Kirim email
+    await sendResetPasswordEmail(user.email, resetToken);
   }
 }

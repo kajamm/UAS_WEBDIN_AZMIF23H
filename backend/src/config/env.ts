@@ -23,6 +23,11 @@ export const env = {
 
   JWT_SECRET: getEnvVar('JWT_SECRET'),
   JWT_EXPIRES_IN: getEnvVar('JWT_EXPIRES_IN', '7d'),
+
+  SMTP_HOST: getEnvVar('SMTP_HOST', 'smtp.gmail.com'),
+  SMTP_PORT: parseInt(getEnvVar('SMTP_PORT', '465'), 10),
+  SMTP_USER: getEnvVar('SMTP_USER', ''),
+  SMTP_PASS: getEnvVar('SMTP_PASS', ''),
 } as const;
 
 export type Env = typeof env;

@@ -14,6 +14,8 @@ export interface UserRow extends RowDataPacket {
   email: string;
   password: string;
   role: 'admin' | 'operator' | 'viewer' | 'user';
+  reset_token?: string | null;
+  reset_token_expired_at?: Date | null;
   created_at: Date;
   updated_at: Date;
 }
