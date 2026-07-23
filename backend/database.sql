@@ -152,12 +152,14 @@ CREATE TABLE `peserta` (
 -- Data dummy: users
 -- -----------------------------------------------------------------------------
 INSERT INTO `users` (`nama`, `email`, `password`, `role`) VALUES
-  ('Administrator',    'admin@webdin.com',    '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-  ('Budi Santoso',     'budi@mahasiswa.com',  '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user'),
-  ('Siti Rahayu',      'siti@mahasiswa.com',  '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user'),
-  ('Ahmad Fauzi',      'ahmad@mahasiswa.com', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user'),
-  ('Dewi Lestari',     'dewi@mahasiswa.com',  '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user'),
-  ('Rizky Pratama',    'rizky@mahasiswa.com', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user');
+  ('Administrator',    'admin@webdin.com',    '$2b$10$cvTRS500MH3wwF.VsUjWj.6.4LYMnVJMy462nMC7didCymchGnwpy', 'admin'),
+  ('Operator',         'operator@webdin.com', '$2b$10$cvTRS500MH3wwF.VsUjWj.6.4LYMnVJMy462nMC7didCymchGnwpy', 'operator'),
+  ('Tamu Viewer',      'viewer@webdin.com',   '$2b$10$cvTRS500MH3wwF.VsUjWj.6.4LYMnVJMy462nMC7didCymchGnwpy', 'viewer'),
+  ('Budi Santoso',     'budi@mahasiswa.com',  '$2b$10$cvTRS500MH3wwF.VsUjWj.6.4LYMnVJMy462nMC7didCymchGnwpy', 'user'),
+  ('Siti Rahayu',      'siti@mahasiswa.com',  '$2b$10$cvTRS500MH3wwF.VsUjWj.6.4LYMnVJMy462nMC7didCymchGnwpy', 'user'),
+  ('Ahmad Fauzi',      'ahmad@mahasiswa.com', '$2b$10$cvTRS500MH3wwF.VsUjWj.6.4LYMnVJMy462nMC7didCymchGnwpy', 'user'),
+  ('Dewi Lestari',     'dewi@mahasiswa.com',  '$2b$10$cvTRS500MH3wwF.VsUjWj.6.4LYMnVJMy462nMC7didCymchGnwpy', 'user'),
+  ('Rizky Pratama',    'rizky@mahasiswa.com', '$2b$10$cvTRS500MH3wwF.VsUjWj.6.4LYMnVJMy462nMC7didCymchGnwpy', 'user');
 
 
 -- -----------------------------------------------------------------------------
