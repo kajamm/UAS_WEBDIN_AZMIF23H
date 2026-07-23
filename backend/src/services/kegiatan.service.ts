@@ -166,6 +166,24 @@ export class KegiatanService {
   }
 
   /**
+   * Update poster kegiatan
+   */
+  async updatePoster(id: number, filename: string): Promise<KegiatanData> {
+    // Pastikan data exist
+    const kegiatan = await this.getById(id);
+
+    // Hapus file lama jika ada? Opsional.
+    // Dalam kasus ini kita biarkan file lama agar simpel, atau 
+    // jika ingin menghapusnya bisa import fs dan fs.unlinkSync.
+
+    const urlPath = `/uploads/${filename}`;
+    
+    await execute('UPDATE kegiatan SET poster = ? WHERE id = ?', [urlPath, id]);
+
+    return this.getById(id);
+  }
+
+  /**
    * Menghapus kegiatan
    */
   async delete(id: number): Promise<void> {

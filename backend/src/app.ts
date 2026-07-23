@@ -27,7 +27,8 @@ if (env.NODE_ENV === 'development') {
 app.use(requestLogger);
 
 // ─── Static Files ───────────────────────────────────────────────────────────
-app.use('/uploads', express.static('src/uploads'));
+import path from 'path';
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // ─── Routes ─────────────────────────────────────────────────────────────────
 app.use('/api', apiRouter);

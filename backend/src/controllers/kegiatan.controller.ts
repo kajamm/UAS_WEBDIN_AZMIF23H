@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { KegiatanService } from '../services/kegiatan.service';
 import { getPagination, sendPaginated, sendSuccess } from '../utils/response';
 import { CreateKegiatanDto, UpdateKegiatanDto, FilterKegiatanQuery } from '../types/kegiatan';
+import { AppError } from '../types';
 
 export class KegiatanController {
   private service: KegiatanService;
@@ -65,6 +66,25 @@ export class KegiatanController {
       const body = req.body as UpdateKegiatanDto;
       const data = await this.service.update(id, body);
       sendSuccess(res, 'Kegiatan berhasil diperbarui', data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * POST /api/kegiatan/:id/upload
+   */
+  uploadPoster = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      
+      // req.file disuntikkan oleh multer
+      if (!req.file) {
+        throw new AppError('File poster tidak ditemukan dalam request (key: poster)', 400);
+      }
+
+      const data = await this.service.updatePoster(id, req.file.filename);
+      sendSuccess(res, 'Poster berhasil diunggah', data);
     } catch (error) {
       next(error);
     }
