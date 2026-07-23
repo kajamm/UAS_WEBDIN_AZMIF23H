@@ -57,11 +57,5 @@ export class AppError extends Error {
 // ─── Express Extension Types ─────────────────────────────────────────────────
 
 import { Request } from 'express';
-
-export interface AuthenticatedRequest extends Request {
-  user?: {
-    id: number;
-    email: string;
-    role: string;
-  };
-}
+// Note: We extend the Request object using Declaration Merging in `src/types/express.d.ts`
+// so req.user is available globally on the standard Request type.

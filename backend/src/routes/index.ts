@@ -3,10 +3,12 @@
 
 import { Router, Request, Response } from 'express';
 import healthRouter from './health.routes';
+import authRouter from './auth.routes';
 
 const router = Router();
 
-// ─── Health Check Route ───────────────────────────────────────────────────────
+// ─── Core Routes ─────────────────────────────────────────────────────────────
+router.use('/auth', authRouter);
 router.use('/health', healthRouter);
 
 // ─── API Info ─────────────────────────────────────────────────────────────────

@@ -20,6 +20,9 @@ export const env = {
   DB_NAME: getEnvVar('DB_NAME', 'uas_webdin'),
 
   FRONTEND_URL: getEnvVar('FRONTEND_URL', 'http://localhost:3001'),
+
+  JWT_SECRET: getEnvVar('JWT_SECRET'),
+  JWT_EXPIRES_IN: getEnvVar('JWT_EXPIRES_IN', '7d'),
 } as const;
 
 export type Env = typeof env;
