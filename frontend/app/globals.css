@@ -297,6 +297,13 @@ body {
   z-index: 30;
 }
 
+/* Tampilkan nama+role di layar >= 640px */
+@media (min-width: 640px) {
+  .navbar-user-info {
+    display: flex !important;
+  }
+}
+
 .hamburger-btn {
   display: block;
   background: none;

@@ -13,38 +13,53 @@ interface UserInfo {
   role: string;
 }
 
+const roleLabel: Record<string, string> = {
+  admin: 'Admin',
+  operator: 'Operator',
+  viewer: 'Viewer',
+  user: 'User',
+};
+
+const roleColor: Record<string, string> = {
+  admin: '#dbeafe',
+  operator: '#fef9c3',
+  viewer: '#dcfce7',
+  user: '#f1f5f9',
+};
+
+const roleTextColor: Record<string, string> = {
+  admin: '#1d4ed8',
+  operator: '#854d0e',
+  viewer: '#166534',
+  user: '#475569',
+};
+
 export default function Navbar({ onMenuClick }: NavbarProps) {
   const router = useRouter();
   const [user, setUser] = useState<UserInfo | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Baca info user dari localStorage
   useEffect(() => {
     const userStr = localStorage.getItem('user');
     if (userStr) {
-      try {
-        setUser(JSON.parse(userStr));
-      } catch {
-        // localStorage corrupt, biarkan null
-      }
+      try { setUser(JSON.parse(userStr)); } catch { /* invalid */ }
     }
   }, []);
 
   // Tutup dropdown saat klik di luar
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handler = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
   const handleLogout = async () => {
     try {
-      // Panggil endpoint logout backend (stateless — hanya untuk log)
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
       const token = localStorage.getItem('token');
       await fetch(`${apiUrl}/auth/logout`, {
@@ -54,103 +69,185 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
       });
-    } catch {
-      // Lanjutkan logout meskipun request gagal
-    } finally {
-      // Hapus data sesi dari localStorage
+    } catch { /* lanjut logout */ } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // Redirect ke halaman login
       router.push('/login');
     }
   };
 
-  // Ambil inisial nama untuk avatar
-  const getInitial = (nama: string) =>
-    nama ? nama.charAt(0).toUpperCase() : '?';
-
-  // Label role yang lebih ramah
-  const roleLabel: Record<string, string> = {
-    admin: 'Admin',
-    operator: 'Operator',
-    viewer: 'Viewer',
-    user: 'User',
-  };
+  const initial = user?.nama ? user.nama.charAt(0).toUpperCase() : '?';
+  const role = user?.role ?? '';
 
   return (
     <header className="top-navbar">
-      <div className="flex items-center">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         {onMenuClick && (
-          <button className="hamburger-btn mr-4" onClick={onMenuClick}>
+          <button className="hamburger-btn" onClick={onMenuClick} style={{ marginRight: '0.25rem' }}>
             ☰
           </button>
         )}
-        <h2 className="font-medium text-lg">Admin Panel</h2>
+        <h2 style={{ fontWeight: 600, fontSize: '1rem', margin: 0 }}>Admin Panel</h2>
       </div>
 
-      <div className="flex items-center gap-4">
-        {/* User profile + logout dropdown */}
-        <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={() => setDropdownOpen((prev) => !prev)}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity focus:outline-none"
-            aria-haspopup="true"
-            aria-expanded={dropdownOpen}
+      {/* User Dropdown */}
+      <div ref={dropdownRef} style={{ position: 'relative' }}>
+        <button
+          onClick={() => setDropdownOpen((v) => !v)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'none',
+            border: '1px solid #e2e8f0',
+            borderRadius: '2rem',
+            padding: '0.35rem 0.75rem 0.35rem 0.35rem',
+            cursor: 'pointer',
+            transition: 'background 0.15s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = '#f8fafc')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
+        >
+          {/* Avatar */}
+          <div
+            style={{
+              width: '2rem',
+              height: '2rem',
+              borderRadius: '50%',
+              backgroundColor: '#2563eb',
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 700,
+              fontSize: '0.875rem',
+              flexShrink: 0,
+            }}
           >
-            <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm select-none">
-              {getInitial(user?.nama ?? 'A')}
-            </div>
-            <div className="hidden sm:flex flex-col items-start leading-tight">
-              <span className="font-medium text-sm">{user?.nama ?? 'User'}</span>
-              <span className="text-xs text-gray-400">
-                {roleLabel[user?.role ?? ''] ?? user?.role ?? ''}
+            {initial}
+          </div>
+          {/* Name + role — hidden on mobile */}
+          <div
+            style={{
+              display: 'none',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              lineHeight: 1.3,
+            }}
+            className="navbar-user-info"
+          >
+            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#1e293b' }}>
+              {user?.nama ?? 'User'}
+            </span>
+            <span style={{ fontSize: '0.6875rem', color: '#94a3b8' }}>
+              {roleLabel[role] ?? role}
+            </span>
+          </div>
+          {/* Chevron */}
+          <span
+            style={{
+              fontSize: '0.6rem',
+              color: '#94a3b8',
+              transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s',
+              lineHeight: 1,
+            }}
+          >
+            ▼
+          </span>
+        </button>
+
+        {/* Dropdown panel */}
+        {dropdownOpen && (
+          <div
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: 'calc(100% + 0.5rem)',
+              minWidth: '220px',
+              backgroundColor: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '0.75rem',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.10)',
+              overflow: 'hidden',
+              zIndex: 50,
+              animation: 'fadeIn 0.15s ease-out',
+            }}
+          >
+            {/* Info user */}
+            <div
+              style={{
+                padding: '0.875rem 1rem',
+                borderBottom: '1px solid #f1f5f9',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  color: '#1e293b',
+                  marginBottom: '0.125rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {user?.nama ?? 'User'}
+              </div>
+              <div
+                style={{
+                  fontSize: '0.75rem',
+                  color: '#64748b',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                {user?.email ?? ''}
+              </div>
+              <span
+                style={{
+                  display: 'inline-block',
+                  fontSize: '0.6875rem',
+                  fontWeight: 600,
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '9999px',
+                  backgroundColor: roleColor[role] ?? '#f1f5f9',
+                  color: roleTextColor[role] ?? '#475569',
+                }}
+              >
+                {roleLabel[role] ?? role}
               </span>
             </div>
-            <svg
-              className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+
+            {/* Logout button */}
+            <button
+              onClick={handleLogout}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.625rem',
+                padding: '0.75rem 1rem',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#dc2626',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                textAlign: 'left',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#fff1f2')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {/* Dropdown menu */}
-          {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50 animate-fadeIn">
-              {/* Info user */}
-              <div className="px-4 py-3 border-b border-gray-100">
-                <p className="text-sm font-semibold text-gray-800 truncate">{user?.nama ?? 'User'}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email ?? ''}</p>
-                <span className="inline-block mt-1 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-                  {roleLabel[user?.role ?? ''] ?? user?.role ?? ''}
-                </span>
-              </div>
-
-              {/* Tombol Logout */}
-              <button
-                onClick={handleLogout}
-                className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-                Keluar
-              </button>
-            </div>
-          )}
-        </div>
+              {/* Logout icon — sederhana, tidak pakai SVG besar */}
+              <span style={{ fontSize: '1rem', lineHeight: 1 }}>⎋</span>
+              Keluar
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
