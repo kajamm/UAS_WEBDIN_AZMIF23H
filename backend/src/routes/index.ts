@@ -6,6 +6,7 @@ import healthRouter from './health.routes';
 import authRouter from './auth.routes';
 import jenisKegiatanRouter from './jenis_kegiatan.routes';
 import kegiatanRouter from './kegiatan.routes';
+import pesertaRouter from './peserta.routes';
 
 const router = Router();
 
@@ -13,6 +14,7 @@ const router = Router();
 router.use('/auth', authRouter);
 router.use('/jenis-kegiatan', jenisKegiatanRouter);
 router.use('/kegiatan', kegiatanRouter);
+router.use('/peserta', pesertaRouter);
 router.use('/health', healthRouter);
 
 // ─── API Info ─────────────────────────────────────────────────────────────────
