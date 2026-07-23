@@ -1,38 +1,30 @@
 // frontend/components/layout/Navbar.tsx
-// Komponen navigasi utama
 
-import Link from 'next/link';
+interface NavbarProps {
+  onMenuClick?: () => void;
+}
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }: NavbarProps) {
   return (
-    <nav className="bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo / Brand */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">UAS</span>
-            </div>
-            <span className="font-bold text-gray-900 text-lg">Web Dinamis</span>
+    <header className="top-navbar">
+      <div className="flex items-center">
+        {onMenuClick && (
+          <button className="hamburger-btn mr-4" onClick={onMenuClick}>
+            ☰
+          </button>
+        )}
+        <h2 className="font-medium text-lg">Admin Panel</h2>
+      </div>
+      
+      <div className="flex items-center gap-4">
+        {/* Placeholder for user profile/logout */}
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+            A
           </div>
-
-          {/* Navigation Links */}
-          <div className="flex items-center gap-6">
-            <Link
-              href="/"
-              className="text-gray-600 hover:text-blue-600 text-sm font-medium transition-colors"
-            >
-              Beranda
-            </Link>
-            <Link
-              href="/status"
-              className="text-gray-600 hover:text-blue-600 text-sm font-medium transition-colors"
-            >
-              Status API
-            </Link>
-          </div>
+          <span className="hidden sm:inline-block font-medium">Admin User</span>
         </div>
       </div>
-    </nav>
+    </header>
   );
 }

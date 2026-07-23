@@ -1,152 +1,108 @@
 // frontend/app/page.tsx
-// Halaman utama (Beranda)
+// Halaman utama (Beranda / Dashboard)
 
-import Link from 'next/link';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Beranda | UAS Web Dinamis',
-  description: 'Project UAS Web Dinamis dengan Next.js dan Express.js',
+  title: 'Dashboard | UAS Web Dinamis',
+  description: 'Dashboard Admin panel',
 };
 
-export default function HomePage() {
+export default function DashboardPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-      {/* Hero Section */}
-      <div
-        style={{
-          background: 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
-          borderRadius: '1rem',
-          padding: '3rem 2rem',
-          color: 'white',
-          marginBottom: '2rem',
-          width: '100%',
-          maxWidth: '700px',
-        }}
-      >
-        <div
-          style={{
-            fontSize: '3rem',
-            marginBottom: '1rem',
-          }}
-        >
-          🚀
+    <div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-500 mt-1">Ringkasan sistem pendaftaran kegiatan</p>
         </div>
-        <h1
-          style={{
-            fontSize: '2rem',
-            fontWeight: 700,
-            marginBottom: '0.75rem',
-          }}
-        >
-          UAS Web Dinamis
-        </h1>
-        <p
-          style={{
-            fontSize: '1rem',
-            opacity: 0.9,
-            marginBottom: '2rem',
-          }}
-        >
-          Project berbasis <strong>Next.js</strong> + <strong>Express.js</strong> + <strong>TypeScript</strong>
-        </p>
-        <Link
-          href="/status"
-          style={{
-            display: 'inline-block',
-            background: 'white',
-            color: '#2563eb',
-            padding: '0.625rem 1.5rem',
-            borderRadius: '0.5rem',
-            fontWeight: 600,
-            fontSize: '0.875rem',
-            textDecoration: 'none',
-          }}
-        >
-          Cek Status API →
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/kegiatan/create" className="btn btn-primary">
+            + Kegiatan Baru
+          </Link>
+        </div>
       </div>
 
-      {/* Info Cards */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '1rem',
-          width: '100%',
-          maxWidth: '700px',
-        }}
-      >
-        <InfoCard
-          icon="⚡"
-          title="Backend"
-          description="Express.js + TypeScript"
-          detail="Port 3000"
-          color="#dbeafe"
-          textColor="#1e40af"
-        />
-        <InfoCard
-          icon="🎨"
-          title="Frontend"
-          description="Next.js + TypeScript"
-          detail="Port 3001"
-          color="#ede9fe"
-          textColor="#5b21b6"
-        />
-        <InfoCard
-          icon="🗄️"
-          title="Database"
-          description="MySQL + mysql2"
-          detail="Port 3306"
-          color="#dcfce7"
-          textColor="#166534"
-        />
+      {/* Stats Grid */}
+      <div className="grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+        <StatCard title="Total Kegiatan" value="12" label="Kegiatan aktif bulan ini" color="blue" />
+        <StatCard title="Total Peserta" value="1,248" label="Terdaftar di semua kegiatan" color="green" />
+        <StatCard title="Jenis Kegiatan" value="5" label="Kategori tersedia" color="yellow" />
+        <StatCard title="Pengguna" value="3" label="Admin & Operator aktif" color="purple" />
+      </div>
+
+      {/* Recent Activity Mockup */}
+      <div className="card">
+        <h2 className="text-lg font-bold mb-4">Kegiatan Mendatang</h2>
+        <div className="overflow-x-auto" style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                <th style={{ padding: '0.75rem', color: '#64748b', fontWeight: 500 }}>Kegiatan</th>
+                <th style={{ padding: '0.75rem', color: '#64748b', fontWeight: 500 }}>Tanggal</th>
+                <th style={{ padding: '0.75rem', color: '#64748b', fontWeight: 500 }}>Lokasi</th>
+                <th style={{ padding: '0.75rem', color: '#64748b', fontWeight: 500 }}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                <td style={{ padding: '1rem 0.75rem', fontWeight: 500 }}>Seminar Web Development 2026</td>
+                <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>24 Jul 2026</td>
+                <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>Auditorium Utama</td>
+                <td style={{ padding: '1rem 0.75rem' }}><span className="badge badge-success">Aktif</span></td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                <td style={{ padding: '1rem 0.75rem', fontWeight: 500 }}>Workshop UI/UX Design</td>
+                <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>12 Agu 2026</td>
+                <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>Lab Komputer A</td>
+                <td style={{ padding: '1rem 0.75rem' }}><span className="badge badge-success">Aktif</span></td>
+              </tr>
+              <tr>
+                <td style={{ padding: '1rem 0.75rem', fontWeight: 500 }}>Lomba Cerdas Cermat IT</td>
+                <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>05 Sep 2026</td>
+                <td style={{ padding: '1rem 0.75rem', color: '#64748b' }}>Gedung Serbaguna</td>
+                <td style={{ padding: '1rem 0.75rem' }}><span className="badge badge-warning">Draft</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
 }
 
-interface InfoCardProps {
-  icon: string;
-  title: string;
-  description: string;
-  detail: string;
-  color: string;
-  textColor: string;
-}
+// ─── Komponen Stat Card Sederhana ──────────────────────────────────────────
 
-function InfoCard({ icon, title, description, detail, color, textColor }: InfoCardProps) {
+function StatCard({ title, value, label, color }: { title: string, value: string, label: string, color: string }) {
+  const colorMap: Record<string, string> = {
+    blue: '#eff6ff',
+    green: '#f0fdf4',
+    yellow: '#fefce8',
+    purple: '#faf5ff'
+  };
+  
+  const textMap: Record<string, string> = {
+    blue: '#1d4ed8',
+    green: '#15803d',
+    yellow: '#a16207',
+    purple: '#7e22ce'
+  };
+
   return (
-    <div
-      style={{
-        background: 'white',
-        border: '1px solid #e5e7eb',
-        borderRadius: '0.75rem',
-        padding: '1.25rem',
-        textAlign: 'center',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-      }}
-    >
-      <div style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>{icon}</div>
-      <h3 style={{ fontWeight: 700, marginBottom: '0.25rem', color: '#111827' }}>
+    <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ color: '#64748b', fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
         {title}
-      </h3>
-      <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>
-        {description}
-      </p>
-      <span
-        style={{
-          display: 'inline-block',
-          background: color,
-          color: textColor,
-          padding: '0.125rem 0.625rem',
-          borderRadius: '9999px',
-          fontSize: '0.75rem',
-          fontWeight: 600,
-        }}
-      >
-        {detail}
-      </span>
+      </div>
+      <div style={{ fontSize: '2rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.5rem' }}>
+        {value}
+      </div>
+      <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <span style={{ background: colorMap[color], color: textMap[color], padding: '0.125rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.75rem', fontWeight: 600 }}>
+          Info
+        </span>
+        <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{label}</span>
+      </div>
     </div>
   );
 }
