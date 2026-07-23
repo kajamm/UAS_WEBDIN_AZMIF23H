@@ -74,20 +74,19 @@ CREATE TABLE `jenis_kegiatan` (
 CREATE TABLE `kegiatan` (
   `id`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `jenis_kegiatan_id` INT UNSIGNED NOT NULL                    COMMENT 'FK ke tabel jenis_kegiatan',
-  `nama_kegiatan`     VARCHAR(200) NOT NULL                    COMMENT 'Nama kegiatan',
+  `judul`             VARCHAR(200) NOT NULL                    COMMENT 'Nama kegiatan / Judul',
   `deskripsi`         TEXT                                     COMMENT 'Deskripsi lengkap kegiatan',
-  `tanggal_mulai`     DATE         NOT NULL                    COMMENT 'Tanggal kegiatan dimulai',
-  `tanggal_selesai`   DATE         NOT NULL                    COMMENT 'Tanggal kegiatan berakhir',
+  `tanggal`           DATE         NOT NULL                    COMMENT 'Tanggal pelaksanaan kegiatan',
   `lokasi`            VARCHAR(200)                             COMMENT 'Tempat pelaksanaan kegiatan',
-  `kuota`             INT UNSIGNED NOT NULL DEFAULT 0          COMMENT 'Jumlah maksimum peserta (0 = tidak terbatas)',
   `status`            ENUM('aktif','selesai','dibatalkan') NOT NULL DEFAULT 'aktif' COMMENT 'Status penyelenggaraan kegiatan',
+  `poster`            VARCHAR(255)                             COMMENT 'Path atau URL poster kegiatan',
   `created_at`        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at`        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   PRIMARY KEY (`id`),
   KEY `idx_kegiatan_jenis` (`jenis_kegiatan_id`),
   KEY `idx_kegiatan_status` (`status`),
-  KEY `idx_kegiatan_tanggal` (`tanggal_mulai`),
+  KEY `idx_kegiatan_tanggal` (`tanggal`),
 
   CONSTRAINT `fk_kegiatan_jenis_kegiatan`
     FOREIGN KEY (`jenis_kegiatan_id`)
@@ -177,43 +176,43 @@ INSERT INTO `jenis_kegiatan` (`nama_jenis`, `deskripsi`) VALUES
 -- Data dummy: kegiatan
 -- (jenis_kegiatan_id: 1=Seminar, 2=Workshop, 3=Lomba, 4=Pengabdian)
 -- -----------------------------------------------------------------------------
-INSERT INTO `kegiatan` (`jenis_kegiatan_id`, `nama_kegiatan`, `deskripsi`, `tanggal_mulai`, `tanggal_selesai`, `lokasi`, `kuota`, `status`) VALUES
+INSERT INTO `kegiatan` (`jenis_kegiatan_id`, `judul`, `deskripsi`, `tanggal`, `lokasi`, `status`, `poster`) VALUES
 
   -- Seminar (jenis_kegiatan_id = 1)
   (1, 'Seminar Nasional Teknologi Informasi 2026',
    'Seminar nasional membahas perkembangan terkini di bidang teknologi informasi, kecerdasan buatan, dan keamanan siber.',
-   '2026-08-10', '2026-08-10', 'Aula Gedung A Lt. 3', 200, 'aktif'),
+   '2026-08-10', 'Aula Gedung A Lt. 3', 'aktif', NULL),
 
   (1, 'Seminar Kewirausahaan Digital',
    'Seminar tentang strategi membangun bisnis digital di era transformasi teknologi dan peluang startup Indonesia.',
-   '2026-09-05', '2026-09-05', 'Aula Gedung B', 150, 'aktif'),
+   '2026-09-05', 'Aula Gedung B', 'aktif', NULL),
 
   -- Workshop (jenis_kegiatan_id = 2)
   (2, 'Workshop Web Development Full Stack',
    'Pelatihan intensif pembuatan aplikasi web menggunakan React.js, Node.js, dan MySQL selama dua hari.',
-   '2026-08-15', '2026-08-16', 'Lab Komputer Gedung C Lt. 2', 40, 'aktif'),
+   '2026-08-15', 'Lab Komputer Gedung C Lt. 2', 'aktif', NULL),
 
   (2, 'Workshop Desain UI/UX dengan Figma',
    'Pelatihan desain antarmuka pengguna menggunakan tools Figma dari dasar hingga pembuatan prototype interaktif.',
-   '2026-09-20', '2026-09-21', 'Lab Multimedia Gedung D', 30, 'aktif'),
+   '2026-09-20', 'Lab Multimedia Gedung D', 'aktif', NULL),
 
   -- Lomba (jenis_kegiatan_id = 3)
   (3, 'Hackathon Nasional 2026',
    'Kompetisi pemrograman 24 jam untuk menciptakan solusi inovatif berbasis teknologi pada tema Smart City.',
-   '2026-08-22', '2026-08-23', 'Gedung Serba Guna Kampus Utama', 100, 'aktif'),
+   '2026-08-22', 'Gedung Serba Guna Kampus Utama', 'aktif', NULL),
 
   (3, 'Lomba Desain Poster Digital',
    'Kompetisi desain poster bertema lingkungan hidup secara digital menggunakan software grafis.',
-   '2026-07-01', '2026-07-15', 'Online (Google Meet)', 60, 'selesai'),
+   '2026-07-01', 'Online (Google Meet)', 'selesai', NULL),
 
   -- Pengabdian Masyarakat (jenis_kegiatan_id = 4)
   (4, 'Pelatihan Literasi Digital untuk UMKM',
    'Program pemberdayaan pelaku UMKM desa dalam memanfaatkan media sosial dan marketplace untuk pengembangan usaha.',
-   '2026-09-12', '2026-09-14', 'Balai Desa Sukamaju, Kab. Bandung', 50, 'aktif'),
+   '2026-09-12', 'Balai Desa Sukamaju, Kab. Bandung', 'aktif', NULL),
 
   (4, 'Bakti Sosial Bersih Pantai',
    'Kegiatan pembersihan pantai dan edukasi masyarakat pesisir tentang pengelolaan sampah plastik.',
-   '2026-06-05', '2026-06-05', 'Pantai Karang Hawu, Sukabumi', 80, 'selesai');
+   '2026-06-05', 'Pantai Karang Hawu, Sukabumi', 'selesai', NULL);
 
 
 -- -----------------------------------------------------------------------------

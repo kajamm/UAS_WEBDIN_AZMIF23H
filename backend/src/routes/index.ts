@@ -5,12 +5,14 @@ import { Router, Request, Response } from 'express';
 import healthRouter from './health.routes';
 import authRouter from './auth.routes';
 import jenisKegiatanRouter from './jenis_kegiatan.routes';
+import kegiatanRouter from './kegiatan.routes';
 
 const router = Router();
 
 // ─── Core Routes ─────────────────────────────────────────────────────────────
 router.use('/auth', authRouter);
 router.use('/jenis-kegiatan', jenisKegiatanRouter);
+router.use('/kegiatan', kegiatanRouter);
 router.use('/health', healthRouter);
 
 // ─── API Info ─────────────────────────────────────────────────────────────────
