@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/auth.controller';
-import { requireAuth } from '../middleware/auth.middleware';
+import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = Router();
 const authController = new AuthController();
@@ -11,6 +11,6 @@ router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 
 // Protected routes (butuh token)
-router.get('/me', requireAuth, authController.getMe);
+router.get('/me', authMiddleware, authController.getMe);
 
 export default router;
