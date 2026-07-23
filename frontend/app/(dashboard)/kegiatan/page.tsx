@@ -4,11 +4,14 @@ import { useState, useEffect, useCallback } from 'react';
 import KegiatanModal from '@/components/kegiatan/KegiatanModal';
 import PosterModal from '@/components/kegiatan/PosterModal';
 import DeleteModal from '@/components/kegiatan/DeleteModal';
+import { useRouter } from 'next/navigation';
 
 export default function KegiatanPage() {
+  const router = useRouter();
   const [data, setData] = useState<any[]>([]);
   const [jenisList, setJenisList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<string>('');
   
   // Fitur pencarian & filter
   const [search, setSearch] = useState('');
@@ -41,6 +44,18 @@ export default function KegiatanPage() {
   const fetchKegiatan = useCallback(async () => {
     setLoading(true);
     try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          setUserRole(user.role || '');
+          if (!['admin', 'operator', 'viewer'].includes(user.role)) {
+            router.push('/unauthorized');
+            return;
+          }
+        } catch (e) {}
+      }
+
       const token = localStorage.getItem('token');
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
       
@@ -98,12 +113,14 @@ export default function KegiatanPage() {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Data Kegiatan</h1>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setModalForm({ isOpen: true, mode: 'add', initialData: null })}
-        >
-          + Tambah Kegiatan
-        </button>
+        {['admin', 'operator'].includes(userRole) && (
+          <button 
+            className="btn btn-primary"
+            onClick={() => setModalForm({ isOpen: true, mode: 'add', initialData: null })}
+          >
+            + Tambah Kegiatan
+          </button>
+        )}
       </div>
 
       {/* Filter / Search Bar */}
@@ -153,7 +170,9 @@ export default function KegiatanPage() {
                 <th style={{ padding: '1rem', fontWeight: 600, color: '#475569' }}>Judul & Tanggal</th>
                 <th style={{ padding: '1rem', fontWeight: 600, color: '#475569' }}>Lokasi</th>
                 <th style={{ padding: '1rem', fontWeight: 600, color: '#475569' }}>Status</th>
-                <th style={{ padding: '1rem', fontWeight: 600, color: '#475569' }}>Aksi</th>
+                {['admin', 'operator'].includes(userRole) && (
+                  <th style={{ padding: '1rem', fontWeight: 600, color: '#475569' }}>Aksi</th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -191,29 +210,31 @@ export default function KegiatanPage() {
                     </td>
                     <td style={{ padding: '1rem', color: '#475569' }}>{item.lokasi}</td>
                     <td style={{ padding: '1rem' }}>{renderStatus(item.status)}</td>
-                    <td style={{ padding: '1rem' }}>
-                      <div className="flex gap-2">
-                        <button 
-                          className="btn btn-secondary text-sm px-2 py-1"
-                          onClick={() => setModalForm({ isOpen: true, mode: 'edit', initialData: item })}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          className="btn btn-secondary text-sm px-2 py-1"
-                          onClick={() => setModalPoster({ isOpen: true, kegiatanId: item.id })}
-                        >
-                          Upload
-                        </button>
-                        <button 
-                          className="btn text-sm px-2 py-1"
-                          style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}
-                          onClick={() => setModalDelete({ isOpen: true, kegiatanId: item.id, judul: item.judul })}
-                        >
-                          Hapus
-                        </button>
-                      </div>
-                    </td>
+                    {['admin', 'operator'].includes(userRole) && (
+                      <td style={{ padding: '1rem' }}>
+                        <div className="flex gap-2">
+                          <button 
+                            className="btn btn-secondary text-sm px-2 py-1"
+                            onClick={() => setModalForm({ isOpen: true, mode: 'edit', initialData: item })}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            className="btn btn-secondary text-sm px-2 py-1"
+                            onClick={() => setModalPoster({ isOpen: true, kegiatanId: item.id })}
+                          >
+                            Upload
+                          </button>
+                          <button 
+                            className="btn text-sm px-2 py-1"
+                            style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}
+                            onClick={() => setModalDelete({ isOpen: true, kegiatanId: item.id, judul: item.judul })}
+                          >
+                            Hapus
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}

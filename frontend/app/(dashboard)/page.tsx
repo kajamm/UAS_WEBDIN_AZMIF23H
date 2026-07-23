@@ -16,6 +16,21 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Role protection
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (!['admin', 'viewer'].includes(user.role)) {
+          router.push('/unauthorized');
+          return;
+        }
+      } catch (e) {}
+    } else {
+      router.push('/login');
+      return;
+    }
+
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');

@@ -12,18 +12,32 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
 
+  const [userRole, setUserRole] = useState<string>('');
+
   // Tutup sidebar saat route berubah pada mobile
   useEffect(() => {
     setIsOpen(false);
   }, [pathname, setIsOpen]);
 
-  const navItems = [
-    { name: 'Dashboard', path: '/' },
-    { name: 'Jenis Kegiatan', path: '/jenis-kegiatan' },
-    { name: 'Kegiatan', path: '/kegiatan' },
-    { name: 'Peserta', path: '/peserta' },
-    { name: 'Pengguna', path: '/users' },
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        setUserRole(user.role || 'user');
+      } catch (e) {}
+    }
+  }, []);
+
+  const allNavItems = [
+    { name: 'Dashboard', path: '/', roles: ['admin', 'viewer'] },
+    { name: 'Jenis Kegiatan', path: '/jenis-kegiatan', roles: ['admin'] },
+    { name: 'Kegiatan', path: '/kegiatan', roles: ['admin', 'operator', 'viewer'] },
+    { name: 'Peserta', path: '/peserta', roles: ['admin', 'operator'] },
+    { name: 'Pengguna', path: '/users', roles: ['admin'] },
   ];
+
+  const navItems = allNavItems.filter(item => item.roles.includes(userRole));
 
   return (
     <>

@@ -34,11 +34,15 @@ export default function LoginPage() {
       // Simpan JWT ke localStorage
       if (data.data && data.data.token) {
         localStorage.setItem('token', data.data.token);
-        // Bisa simpan user data juga kalau perlu
         localStorage.setItem('user', JSON.stringify(data.data.user));
         
-        // Redirect ke dashboard
-        router.push('/');
+        // Redirect berdasarkan role
+        const role = data.data.user.role;
+        if (role === 'operator') {
+          router.push('/kegiatan');
+        } else {
+          router.push('/');
+        }
       } else {
         throw new Error('Token tidak ditemukan dari server.');
       }

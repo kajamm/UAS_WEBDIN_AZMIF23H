@@ -23,6 +23,17 @@ export default function UserManagementPage() {
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          if (user.role !== 'admin') {
+            router.push('/unauthorized');
+            return;
+          }
+        } catch (e) {}
+      }
+
       const token = localStorage.getItem('token');
       // Role middleware will block if not admin, but let's handle 401/403
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
