@@ -125,8 +125,8 @@ export default function KegiatanPage() {
 
       {/* Filter / Search Bar */}
       <div className="card mb-6">
-        <form onSubmit={handleFilterSubmit} className="flex flex-col md:flex-row gap-4 items-end">
-          <div className="form-group flex-1 w-full">
+        <form onSubmit={handleFilterSubmit} className="flex gap-4 items-end" style={{ flexWrap: 'wrap' }}>
+          <div className="form-group flex-1" style={{ minWidth: '200px' }}>
             <label className="form-label">Pencarian Judul</label>
             <input 
               type="text" 
@@ -136,16 +136,16 @@ export default function KegiatanPage() {
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <div className="form-group w-full md:w-48">
+          <div className="form-group" style={{ minWidth: '150px' }}>
             <label className="form-label">Jenis Kegiatan</label>
             <select className="form-input" value={jenisId} onChange={e => setJenisId(e.target.value)}>
               <option value="">Semua Jenis</option>
               {jenisList.map(jk => (
-                <option key={jk.id} value={jk.id}>{jk.nama}</option>
+                <option key={jk.id} value={jk.id}>{jk.nama_jenis}</option>
               ))}
             </select>
           </div>
-          <div className="form-group w-full md:w-40">
+          <div className="form-group" style={{ minWidth: '150px' }}>
             <label className="form-label">Status</label>
             <select className="form-input" value={status} onChange={e => setStatus(e.target.value)}>
               <option value="">Semua Status</option>
@@ -154,7 +154,7 @@ export default function KegiatanPage() {
               <option value="selesai">Selesai</option>
             </select>
           </div>
-          <button type="submit" className="btn btn-secondary h-10 w-full md:w-auto">
+          <button type="submit" className="btn btn-secondary h-10">
             Cari & Filter
           </button>
         </form>

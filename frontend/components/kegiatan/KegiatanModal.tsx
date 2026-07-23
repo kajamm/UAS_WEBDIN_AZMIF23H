@@ -108,7 +108,7 @@ export default function KegiatanModal({ isOpen, onClose, onSuccess, mode, initia
             >
               <option value="">Pilih Jenis Kegiatan</option>
               {jenisKegiatanList.map(jk => (
-                <option key={jk.id} value={jk.id}>{jk.nama}</option>
+                <option key={jk.id} value={jk.id}>{jk.nama_jenis}</option>
               ))}
             </select>
           </div>

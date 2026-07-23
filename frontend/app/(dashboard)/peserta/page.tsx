@@ -82,9 +82,9 @@ function FormModal({ isOpen, mode, initialData, kegiatanList, onClose, onSuccess
         },
         body: JSON.stringify({
           kegiatan_id: parseInt(form.kegiatan_id),
-          nama: form.nama.trim(),
-          email: form.email.trim(),
-          no_hp: form.no_hp.trim() || null,
+          nama: (form.nama || '').trim(),
+          email: (form.email || '').trim(),
+          no_hp: (form.no_hp || '').trim() || null,
           status_pendaftaran: form.status_pendaftaran,
         }),
       });
@@ -92,7 +92,7 @@ function FormModal({ isOpen, mode, initialData, kegiatanList, onClose, onSuccess
       if (!response.ok) throw new Error(result.message || 'Gagal menyimpan data');
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'Terjadi kesalahan');
+      setError(err.message || 'Terjadi kesalahan pada server');
     } finally {
       setLoading(false);
     }
@@ -101,13 +101,13 @@ function FormModal({ isOpen, mode, initialData, kegiatanList, onClose, onSuccess
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3 className="modal-title">
+    <div className="sidebar-overlay open" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }} onClick={onClose}>
+      <div className="card" style={{ width: '100%', maxWidth: '500px', margin: '0 1rem', maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header flex justify-between items-center mb-4">
+          <h3 className="text-xl font-bold">
             {mode === 'add' ? 'Tambah Peserta' : 'Edit Peserta'}
           </h3>
-          <button className="modal-close" onClick={onClose}>✕</button>
+          <button className="text-gray-500 hover:text-gray-700 text-xl font-bold" onClick={onClose}>✕</button>
         </div>
 
         {error && (
@@ -232,7 +232,7 @@ function DeleteModal({ isOpen, item, onClose, onSuccess }: DeleteModalProps) {
       if (!response.ok) throw new Error(result.message || 'Gagal menghapus data');
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'Terjadi kesalahan');
+      setError(err.message || 'Terjadi kesalahan pada server');
     } finally {
       setLoading(false);
     }
@@ -241,11 +241,11 @@ function DeleteModal({ isOpen, item, onClose, onSuccess }: DeleteModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" style={{ maxWidth: '420px' }} onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3 className="modal-title">Hapus Peserta</h3>
-          <button className="modal-close" onClick={onClose}>✕</button>
+    <div className="sidebar-overlay open" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }} onClick={onClose}>
+      <div className="card" style={{ width: '100%', maxWidth: '420px', margin: '0 1rem' }} onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header flex justify-between items-center mb-4">
+          <h3 className="text-xl font-bold">Hapus Peserta</h3>
+          <button className="text-gray-500 hover:text-gray-700 text-xl font-bold" onClick={onClose}>✕</button>
         </div>
         <p className="text-gray-600 mb-4">
           Yakin ingin menghapus peserta{' '}
@@ -254,7 +254,7 @@ function DeleteModal({ isOpen, item, onClose, onSuccess }: DeleteModalProps) {
         {error && (
           <div className="bg-red-100 text-red-700 p-3 rounded-lg text-sm mb-4">{error}</div>
         )}
-        <div className="modal-footer" style={{ paddingTop: 0 }}>
+        <div className="flex justify-end gap-2 mt-4">
           <button className="btn btn-secondary" onClick={onClose} disabled={loading}>
             Batal
           </button>
@@ -411,7 +411,7 @@ export default function PesertaPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <div className="flex justify-between items-center mb-6 gap-4" style={{ flexWrap: 'wrap' }}>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Data Peserta</h1>
           <p className="text-gray-500 mt-1">Daftar peserta yang terdaftar di setiap kegiatan</p>
@@ -428,32 +428,38 @@ export default function PesertaPage() {
 
       {/* Filter & Search */}
       <div className="card mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
-          <input
-            type="text"
-            className="form-input flex-1"
-            placeholder="Cari nama, email, atau judul kegiatan..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <select
-            className="form-input md:w-56"
-            value={filterKegiatanId}
-            onChange={(e) => setFilterKegiatanId(e.target.value)}
-          >
-            <option value="">Semua Kegiatan</option>
-            {kegiatanList.map((k) => (
-              <option key={k.id} value={k.id}>
-                {k.judul}
-              </option>
-            ))}
-          </select>
+        <div className="flex gap-4 items-end" style={{ flexWrap: 'wrap' }}>
+          <div className="form-group flex-1" style={{ minWidth: '200px' }}>
+            <label className="form-label">Pencarian</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Cari nama, email, atau judul..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <div className="form-group" style={{ minWidth: '200px' }}>
+            <label className="form-label">Filter Kegiatan</label>
+            <select
+              className="form-input"
+              value={filterKegiatanId}
+              onChange={(e) => setFilterKegiatanId(e.target.value)}
+            >
+              <option value="">Semua Kegiatan</option>
+              {kegiatanList.map((k) => (
+                <option key={k.id} value={k.id}>
+                  {k.judul}
+                </option>
+              ))}
+            </select>
+          </div>
           {(search || filterKegiatanId) && (
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary h-10"
               onClick={() => { setSearch(''); setFilterKegiatanId(''); }}
             >
-              Reset
+              Reset Filter
             </button>
           )}
         </div>
