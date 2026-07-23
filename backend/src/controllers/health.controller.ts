@@ -2,7 +2,7 @@
 // Controller untuk health check server dan koneksi database
 
 import { Request, Response, NextFunction } from 'express';
-import { testConnection } from '../config/database';
+import { testConnection, getPoolInfo } from '../config/db';
 import { sendSuccess, sendError } from '../utils/response';
 import { env } from '../config/env';
 
@@ -31,10 +31,12 @@ export class HealthController {
   ): Promise<void> => {
     try {
       await testConnection();
+      const poolInfo = getPoolInfo();
       sendSuccess(res, 'Koneksi database berhasil', {
         status: 'Connected',
-        host: env.DB_HOST,
-        database: env.DB_NAME,
+        host: `${poolInfo.config.host}:${poolInfo.config.port}`,
+        database: poolInfo.config.database,
+        connectionLimit: poolInfo.config.connectionLimit,
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
