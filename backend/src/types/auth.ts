@@ -11,7 +11,7 @@ export interface UserPayload {
   id: number;
   nama: string;
   email: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'operator' | 'viewer' | 'user';
   iat?: number;
   exp?: number;
 }
@@ -38,7 +38,7 @@ export interface SafeUserData {
   id: number;
   nama: string;
   email: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'operator' | 'viewer' | 'user';
   created_at: Date;
   updated_at: Date;
 }

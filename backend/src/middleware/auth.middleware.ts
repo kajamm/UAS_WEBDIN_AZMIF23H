@@ -29,3 +29,28 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     next(error);
   }
 };
+
+/**
+ * Middleware untuk membatasi akses berdasarkan role (Otorisasi).
+ * Harus dijalankan SETELAH authMiddleware.
+ * 
+ * @param roles - Daftar role yang diizinkan (contoh: 'admin', 'operator')
+ */
+export const roleMiddleware = (...roles: Array<'admin' | 'operator' | 'viewer' | 'user'>) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.user) {
+        throw new AppError('Unauthorized: Harap login terlebih dahulu', 401);
+      }
+
+      // Cek apakah role user ada di dalam daftar roles yang diizinkan
+      if (!roles.includes(req.user.role)) {
+        throw new AppError('Akses ditolak: Anda tidak memiliki hak akses', 403);
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};

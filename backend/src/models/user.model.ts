@@ -13,7 +13,7 @@ export interface UserRow extends RowDataPacket {
   nama: string;
   email: string;
   password: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'operator' | 'viewer' | 'user';
   created_at: Date;
   updated_at: Date;
 }
@@ -27,7 +27,7 @@ export interface SafeUserRow extends RowDataPacket {
   id: number;
   nama: string;
   email: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'operator' | 'viewer' | 'user';
   created_at: Date;
   updated_at: Date;
 }
