@@ -94,4 +94,67 @@ export class AuthController {
       next(error);
     }
   };
+
+  /**
+   * POST /api/auth/forgot-password
+   */
+  forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        throw new AppError('Email wajib diisi', 400);
+      }
+      if (!isValidEmail(email)) {
+        throw new AppError('Format email tidak valid', 400);
+      }
+
+      await this.authService.forgotPassword(email);
+      
+      // We always say it's sent to prevent email enumeration
+      sendSuccess(res, 'Jika email terdaftar, link reset telah dikirim ke email tersebut.');
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * POST /api/auth/reset-password
+   */
+  resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { token, newPassword } = req.body;
+      if (!token || !newPassword) {
+        throw new AppError('Token dan password baru wajib diisi', 400);
+      }
+
+      await this.authService.resetPassword(token, newPassword);
+      
+      sendSuccess(res, 'Password berhasil diubah. Silakan login kembali.');
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * POST /api/auth/change-password
+   */
+  changePassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new AppError('Unauthorized', 401);
+      }
+
+      const { oldPassword, newPassword } = req.body;
+      if (!oldPassword || !newPassword) {
+        throw new AppError('Password lama dan password baru wajib diisi', 400);
+      }
+
+      await this.authService.changePassword(userId, oldPassword, newPassword);
+      
+      sendSuccess(res, 'Password berhasil diubah.');
+    } catch (error) {
+      next(error);
+    }
+  };
 }

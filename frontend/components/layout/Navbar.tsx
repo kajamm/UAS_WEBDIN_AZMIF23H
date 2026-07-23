@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import ChangePasswordModal from '../users/ChangePasswordModal';
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -38,6 +39,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
   const router = useRouter();
   const [user, setUser] = useState<UserInfo | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -221,6 +223,35 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
               </span>
             </div>
 
+            {/* Ubah Password button */}
+            <button
+              onClick={() => {
+                setDropdownOpen(false);
+                setIsChangePasswordOpen(true);
+              }}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.625rem',
+                padding: '0.75rem 1rem',
+                background: 'none',
+                border: 'none',
+                borderBottom: '1px solid #f1f5f9',
+                cursor: 'pointer',
+                color: '#475569',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                textAlign: 'left',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#f8fafc')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
+            >
+              <span style={{ fontSize: '1rem', lineHeight: 1 }}>🔑</span>
+              Ubah Password
+            </button>
+
             {/* Logout button */}
             <button
               onClick={handleLogout}
@@ -249,6 +280,11 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
           </div>
         )}
       </div>
+
+      <ChangePasswordModal 
+        isOpen={isChangePasswordOpen} 
+        onClose={() => setIsChangePasswordOpen(false)} 
+      />
     </header>
   );
 }

@@ -83,7 +83,10 @@ export default function LoginPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
+            <div className="flex justify-between items-center mb-1">
+              <label className="form-label mb-0" htmlFor="password">Password</label>
+              <a href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800 transition-colors">Lupa Password?</a>
+            </div>
             <input
               id="password"
               type="password"
