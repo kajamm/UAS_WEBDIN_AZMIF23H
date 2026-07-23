@@ -32,13 +32,11 @@ app.use('/uploads', express.static('src/uploads'));
 // ─── Routes ─────────────────────────────────────────────────────────────────
 app.use('/api', apiRouter);
 
-// ─── Health Check ────────────────────────────────────────────────────────────
+// ─── Root Route ──────────────────────────────────────────────────────────────
 app.get('/', (_req, res) => {
   res.json({
     success: true,
-    message: 'UAS Web Dinamis - Backend API',
-    version: '1.0.0',
-    timestamp: new Date().toISOString(),
+    message: 'Backend Running',
   });
 });
 
