@@ -176,9 +176,8 @@ export class KegiatanService {
     // Dalam kasus ini kita biarkan file lama agar simpel, atau 
     // jika ingin menghapusnya bisa import fs dan fs.unlinkSync.
 
-    const urlPath = `/uploads/${filename}`;
-    
-    await execute('UPDATE kegiatan SET poster = ? WHERE id = ?', [urlPath, id]);
+    // Simpan hanya nama file (tanpa prefix /uploads/) agar konsisten dengan cara frontend membacanya
+    await execute('UPDATE kegiatan SET poster = ? WHERE id = ?', [filename, id]);
 
     return this.getById(id);
   }

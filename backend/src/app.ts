@@ -13,8 +13,15 @@ import apiRouter from './routes';
 const app: Application = express();
 
 // ─── Security Middleware ────────────────────────────────────────────────────
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(cors(corsOptions));
+
+// ─── Static Files (before other middleware for proper CORS headers) ──────────
+app.use('/uploads', (req: any, res: any, next: any) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+});
 
 // ─── Request Parsing ────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
@@ -26,7 +33,6 @@ if (env.NODE_ENV === 'development') {
 }
 app.use(requestLogger);
 
-// ─── Static Files ───────────────────────────────────────────────────────────
 import path from 'path';
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 

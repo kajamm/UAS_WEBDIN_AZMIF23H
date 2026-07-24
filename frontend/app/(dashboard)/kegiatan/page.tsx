@@ -194,7 +194,7 @@ export default function KegiatanPage() {
                     <td style={{ padding: '1rem' }}>
                       {item.poster ? (
                         <img 
-                          src={`http://localhost:3000/uploads/${item.poster}`} 
+                          src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api').replace('/api', '')}/uploads/${item.poster}`} 
                           alt="Poster" 
                           style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
                         />
